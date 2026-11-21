@@ -109,14 +109,20 @@ class LandlordMixin:
             raise Refused(f"l_{err.code}") from err
         async with self.db.tx() as c:
             await self._check_duplicates(c, uid, clean, skip=lid)
+            await self._write_update(c, uid, lid, clean)
+        self.changed()
+        return await self.card(uid, lid)
+
+    async def _write_update(self, c, uid: int, lid: int, clean: dict) -> None:
+        try:
             await c.execute("UPDATE listings SET price = ?, currency = ?, note = ?, furnished = ?, pets = ?, "
                             "amenities = ?, renovation = ?, audience = ?, address = ?, fingerprint = ?, updated_at = ? "
                             "WHERE id = ? AND landlord_id = ?",
                             (clean["price"], clean["currency"], clean["note"], clean["furnished"], clean["pets"],
                              json.dumps(clean["amenities"]), clean["renovation"], clean["audience"], clean["address"],
                              fingerprint(clean, self.rate), self.now(), lid, uid))
-        self.changed()
-        return await self.card(uid, lid)
+        except sqlite3.IntegrityError as err:  # a twin slipped in between: the unique index refuses it
+            raise Refused("duplicate") from err
 
     async def set_status(self, uid: int, lid: int, action: str) -> dict:
         """pause / resume / renew (another 30 days from now; also brings an expired listing back)."""
