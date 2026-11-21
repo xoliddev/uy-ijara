@@ -1,6 +1,7 @@
 // A listing's page: drawn photos and floor plan, "Narx adolatlimi?" with the band bar and the biggest factors, facts,
 // the approximate area on a map, viewing slots -> request, and contacts only after the landlord accepts.
 import { fmtPhone } from '../shared/listing.js';
+import { shownVerdict } from '../shared/i18n.js';
 import { galleryKinds, roomSvg } from './art.js';
 import { createMap } from './map.js';
 import { approxUzs, name, phoneSheet, price, since, verdictBlock, when } from './parts.js';
@@ -39,7 +40,7 @@ function contactBlock(ctx, c) {
   const osm = `https://www.openstreetmap.org/?mlat=${c.lat}&mlon=${c.lon}#map=17/${c.lat}/${c.lon}`;
   return h('div', { class: 'ui-contact', 'data-testid': 'contact' },
     h('p', { html: ctx.T('card.contact', { address: c.address, phone: c.phone ? fmtPhone(c.phone) : '—' }).replace(/\n/g, '<br>') }),
-    h('div', { class: 'ui-row' }, c.phone ? h('a', { class: 'ui-btn small', href: `tel:${c.phone}` }, fmtPhone(c.phone)) : null,
+    h('div', { class: 'ui-row' }, c.phone ? h('a', { class: 'ui-btn small', href: `tel:${c.phone}` }, ctx.T('app.call')) : null,
       c.lat ? h('a', { class: 'ui-btn small ghost', href: osm, target: '_blank', rel: 'noopener' }, ctx.T('app.open_map')) : null));
 }
 
@@ -115,6 +116,6 @@ export async function renderDetail(ctx, id, keepScroll = false) {
         ctx.T('btn.report'))));
   if (ctx.pageEl) ctx.pageEl.scrollTop = scroll;
   const map = createMap(mapEl, { attribution: ctx.T('map.attrib'), interactive: false, zoom: 13 });
-  map.setArea(x.pin_lat, x.pin_lon, x.eval?.verdict ?? 'few');
+  map.setArea(x.pin_lat, x.pin_lon, shownVerdict(x.eval));
   requestAnimationFrame(() => map.invalidate());
 }

@@ -3,7 +3,10 @@
 import { civil, hhmm, localDay, localMinute, weekday } from './clock.js';
 import { fromUzs, group, roundTo, USD } from './money.js';
 
-export const DOTS = { cheap: '🟢', fair: '🔵', expensive: '🔴', few: '⚪' };
+export const DOTS = { cheap: '🟢', fair: '🔵', expensive: '🔴', few: '⚪', suspicious: '⚠️' };
+
+/** The verdict to show: a far-too-cheap rent is a warning, not a green deal. */
+export const shownVerdict = (ev) => (ev?.suspicious ? 'suspicious' : ev?.verdict ?? 'few');
 export const MINUS = '−';
 
 export class Raw {
@@ -45,7 +48,8 @@ export const districtName = (lang, did, dmap) => dmap[did].name[normLang(lang)];
 
 export function verdictLine(t, lang, ev) {
   if (!ev) return '';
-  return `${DOTS[ev.verdict]} ${t(lang, `verdict.${ev.verdict}`)}${ev.pct === null ? '' : ` ${signed(ev.pct)}`}`;
+  const v = shownVerdict(ev);
+  return `${DOTS[v]} ${t(lang, `verdict.${v}`)}${ev.pct === null ? '' : ` ${signed(ev.pct)}`}`;
 }
 
 export function fairText(t, lang, x, ev, dmap, rate) {

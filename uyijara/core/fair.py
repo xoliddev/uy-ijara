@@ -30,6 +30,7 @@ FIRST_FLOOR, LAST_FLOOR = -5, -4
 VERDICTS = ("cheap", "fair", "expensive", "few")
 SUSPICIOUS_PCT = -35  # far below every comparable: show a scam warning
 FEW_SCORE = 1_000_000  # "not enough data" sorts after every real verdict
+SUSPICIOUS_SCORE = 900_000  # a too-good-to-be-true rent is not a "best deal": it sorts after the real verdicts
 
 
 def median(xs: list[int]) -> int:
@@ -126,8 +127,9 @@ def evaluate(target: dict, pool: list[dict], rate: int) -> dict:
         return {**est, "verdict": "few", "pct": None, "price_uzs": None, "score": FEW_SCORE, "suspicious": False}
     price = to_uzs(target["price"], target["currency"], rate)
     pct = div_round((price - est["expected"]) * 100, est["expected"])
-    return {**est, "verdict": verdict_of(pct), "pct": pct, "price_uzs": price, "score": pct,
-            "suspicious": pct <= SUSPICIOUS_PCT}
+    suspicious = pct <= SUSPICIOUS_PCT
+    return {**est, "verdict": verdict_of(pct), "pct": pct, "price_uzs": price,
+            "score": SUSPICIOUS_SCORE + pct if suspicious else pct, "suspicious": suspicious}
 
 
 def evaluate_all(listings: list[dict], rate: int) -> dict[int, dict]:

@@ -15,6 +15,7 @@ export const FIRST_FLOOR = -5;
 export const LAST_FLOOR = -4;
 export const SUSPICIOUS_PCT = -35;
 export const FEW_SCORE = 1_000_000;
+export const SUSPICIOUS_SCORE = 900_000;
 
 export function median(xs) {
   const s = [...xs].sort((a, b) => a - b);
@@ -86,7 +87,8 @@ export function evaluate(target, pool, rate) {
   if (est.expected === null) return { ...est, verdict: 'few', pct: null, price_uzs: null, score: FEW_SCORE, suspicious: false };
   const price = toUzs(target.price, target.currency, rate);
   const pct = divRound((price - est.expected) * 100, est.expected);
-  return { ...est, verdict: verdictOf(pct), pct, price_uzs: price, score: pct, suspicious: pct <= SUSPICIOUS_PCT };
+  const suspicious = pct <= SUSPICIOUS_PCT;
+  return { ...est, verdict: verdictOf(pct), pct, price_uzs: price, score: suspicious ? SUSPICIOUS_SCORE + pct : pct, suspicious };
 }
 
 export function evaluateAll(listings, rate) {

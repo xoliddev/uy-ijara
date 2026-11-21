@@ -16,7 +16,12 @@ from .core.money import USD, from_uzs, group, round_to
 
 LOCALE_DIR = Path(__file__).resolve().parent.parent / "shared" / "locales"
 _PLACEHOLDER = re.compile(r"\{(\w+)\}")
-DOTS = {"cheap": "🟢", "fair": "🔵", "expensive": "🔴", "few": "⚪"}
+DOTS = {"cheap": "🟢", "fair": "🔵", "expensive": "🔴", "few": "⚪", "suspicious": "⚠️"}
+
+
+def shown_verdict(ev: dict) -> str:
+    """The verdict to show: a far-too-cheap rent is a warning, not a green deal."""
+    return "suspicious" if ev.get("suspicious") else ev["verdict"]
 MINUS = "−"
 
 
@@ -77,8 +82,8 @@ def verdict_line(lang: str, ev: dict | None) -> str:
     """ "🟢 Arzon −26%" — the verdict as a short tag."""
     if not ev:
         return ""
-    word = t(lang, f"verdict.{ev['verdict']}")
-    return f"{DOTS[ev['verdict']]} {word}" + (f" {signed(ev['pct'])}" if ev["pct"] is not None else "")
+    v = shown_verdict(ev)
+    return f"{DOTS[v]} {t(lang, f'verdict.{v}')}" + (f" {signed(ev['pct'])}" if ev["pct"] is not None else "")
 
 
 def fair_text(lang: str, x: dict, ev: dict, dmap: dict, rate: int) -> str:

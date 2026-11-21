@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parent.parent
 NOW = 1_795_000_000_000  # Wednesday 2026-11-18, 16:06 in Tashkent (the same moment as the shared vectors)
 ADMIN, AZIZ, KAMOLA, TIMUR, NODIRA, JAVOHIR = 9001, 1001, 1002, 1003, 3001, 3005
 CHEAP, EXPENSIVE, OTHER, PAUSED = seedgen.STORY_CHEAP, seedgen.STORY_EXPENSIVE, seedgen.LANDLORD_OTHER, seedgen.PAUSED
+SUSPICIOUS = seedgen.SUSPICIOUS
 
 
 def load(name: str):

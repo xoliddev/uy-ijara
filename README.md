@@ -30,7 +30,8 @@ simulated bot and the real Mini App code. Everything runs in your browser.
 - **Fair-price verdict on every listing.** Median price per m² of comparable listings, adjusted by a few integer
   coefficients (renovation, building type, furniture, first/last floor). The 2–3 biggest factors are shown
   ("Yevro ta'mir +10%, Mebelli +8%"), plus the fair band as a bar with this rent's position on it.
-  A rent far below every comparable gets a scam warning.
+  A rent 35 % or more below its comparables is not shown as a green deal: it is an amber **"Shubhali arzon"**
+  (suspiciously cheap) warning, it sorts after the real verdicts, and the listing says not to pay in advance.
 - **Robust to junk.** Comparables are the same district and room count, falling back to ±1 room, then the whole
   district — the sentence says which. Fewer than 5 comparables gives "Ma'lumot kam" (not enough data) instead of a
   made-up verdict. Outliers are dropped with the modified z-score, so one fake listing cannot move the median.

@@ -1,6 +1,6 @@
 // Small pieces shared by the Mini App screens: prices, verdict badges, the fair-band bar, thumbnails, phone sheet.
 import { whereInBand } from '../shared/fair.js';
-import { ago, bandMoney, districtName, fairText, factorsText, money, signed, slotLabel, title } from '../shared/i18n.js';
+import { ago, bandMoney, districtName, fairText, factorsText, money, shownVerdict, signed, slotLabel, title } from '../shared/i18n.js';
 import { fromUzs, group, USD } from '../shared/money.js';
 import { roomSvg } from './art.js';
 import { h, haptic } from './util.js';
@@ -20,7 +20,7 @@ export function shortPrice(ctx, x) {
 }
 
 export function verdictBadge(ctx, ev, big = false) {
-  const v = ev?.verdict ?? 'few';
+  const v = shownVerdict(ev);
   const pct = ev && ev.pct !== null ? ` ${signed(ev.pct)}` : '';
   return h('span', { class: `ui-badge is-${v}${big ? ' big' : ''}`, 'data-testid': `verdict-${v}` },
     h('i', { 'aria-hidden': 'true' }), `${ctx.T(`verdict.${v}`)}${pct}`);
@@ -36,14 +36,14 @@ export function bandBar(ctx, ev, priceUzs, currency) {
     h('span', { class: 'z cheap' }), h('span', { class: 'z fair' }), h('span', { class: 'z expensive' }));
   if (priceUzs) {
     const pos = whereInBand(priceUzs, ev.band);
-    bar.append(h('b', { class: `ui-mark is-${ev.verdict ?? 'fair'}`, style: `left:${pos}%`, 'data-pos': String(pos) }));
+    bar.append(h('b', { class: `ui-mark is-${ev.verdict ? shownVerdict(ev) : 'fair'}`, style: `left:${pos}%`, 'data-pos': String(pos) }));
   }
   return h('div', { class: 'ui-band-wrap' }, bar, h('div', { class: 'ui-band-labels' }, h('span', {}, lo), h('span', {}, hi)));
 }
 
 export function verdictBlock(ctx, x, ev) {
   const t = tf(ctx);
-  const box = h('section', { class: `ui-verdict is-${ev.verdict}`, 'data-testid': 'verdict' },
+  const box = h('section', { class: `ui-verdict is-${shownVerdict(ev)}`, 'data-testid': 'verdict' },
     h('div', { class: 'ui-verdict-top' }, h('small', {}, ctx.T('verdict.title')), verdictBadge(ctx, ev, true)),
     h('p', { class: 'ui-fair-text' }, fairText(t, ctx.lang, x, ev, ctx.dmap, ctx.rate).split('\n')[0]));
   if (ev.band) box.append(bandBar(ctx, ev, ev.price_uzs, x.currency));

@@ -132,7 +132,11 @@ async def test_russian_menu_and_admin_moderation():
         await sim.tap(AZIZ, "Чиланзар")
         await sim.tap(AZIZ, "2-комнатная")
         await sim.tap(AZIZ, "Не важно")
-        await sim.tap(AZIZ, "1.")  # first by fair-price score: the suspiciously cheap one
+        top = next(line for line in sim.last(AZIZ).splitlines() if line.startswith("<b>1.</b>"))
+        assert "⚠️" not in top  # a too-cheap offer is never the top "fair" pick
+        await sim.tap(AZIZ, "Дешёвые")
+        assert "⚠️ Подозрительно дёшево" in sim.last(AZIZ)
+        await sim.tap(AZIZ, "1.")  # the cheapest: the suspicious one
         assert "Осторожно" in sim.last(AZIZ)
         await sim.tap(AZIZ, "Пожаловаться")
         await sim.tap(AZIZ, "Похоже на мошенничество")

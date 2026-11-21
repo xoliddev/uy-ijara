@@ -60,7 +60,8 @@ async function story(page, mobile) {
   ok((await text(page, '[data-testid=aziz-chat]')).includes('Topildi: 8'), 'bot found 8 two-room flats in Chilonzor');
   await step(page, 2);
   await app.locator('.ui-pin.is-expensive').first().waitFor({ state: 'attached' });
-  ok(await app.locator('.ui-pin.is-cheap').count() >= 2, 'green pins on the map');
+  ok(await app.locator('.ui-pin.is-cheap').count() >= 1, 'green pins on the map');
+  ok(await app.locator('.ui-pin.is-suspicious').count() === 1, 'the too-cheap offer is an amber warning, not a green deal');
   ok(await app.locator('.ui-pin').count() === 8, 'eight pins for the filter');
   await step(page, 3);
   ok((await text(page, '[data-testid=aziz-app] [data-testid=verdict]')).includes('22% qimmat'), 'the expensive one explains itself');

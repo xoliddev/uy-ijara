@@ -29,7 +29,8 @@ Mini App brauzerning o'zida ishlaydi, hech narsa o'rnatish shart emas.
 - **Har bir e'londa narx bahosi.** O'xshash uylarning 1 m² narxi medianasi olinadi va bir nechta butun sonli
   koeffitsiyent bilan to'g'rilanadi: ta'mir, bino turi, mebel, birinchi/oxirgi qavat. Eng katta 2–3 sabab
   ko'rsatiladi («Yevro ta'mir +10%, Mebelli +8%»), adolatli oraliq esa chiziq ko'rinishida, ustida shu uyning joyi.
-  Hamma o'xshash uylardan juda arzon bo'lsa — «ehtiyot bo'ling» ogohlantirishi chiqadi.
+  O'xshash uylardan 35% va undan ko'p arzon bo'lsa, u yashil «zo'r taklif» bo'lib chiqmaydi: sariq **«Shubhali arzon»**
+  belgisi oladi, ro'yxat oxiriga tushadi va «oldindan pul o'tkazmang» ogohlantirishi chiqadi.
 - **Soxta e'lon bahoni buzmaydi.** Avval shu tuman va shuncha xonali uylar olinadi; kam bo'lsa ±1 xona, keyin butun
   tuman — gapda qaysi biri ekani aytiladi. 5 tadan kam bo'lsa, o'ylab topilgan baho emas, «Ma'lumot kam» chiqadi.
   Juda g'alati narxlar (modified z-score) hisobdan chiqariladi.

@@ -1,11 +1,12 @@
 // Search tab: a forgiving text search (Latin or Cyrillic), quick filters, the map with pins coloured by the fair-price
 // verdict, the list sorted by fair-price score / newest / cheapest, and "notify me about new listings like these".
 import { AREA_FILTERS, AUD_FILTERS, SORTS } from '../shared/search.js';
+import { shownVerdict } from '../shared/i18n.js';
 import { createMap } from './map.js';
 import { name, price, shortPrice, since, thumb, verdictBadge } from './parts.js';
 import { debounce, h, haptic } from './util.js';
 
-const VERDICTS = ['cheap', 'fair', 'expensive', 'few'];
+const VERDICTS = ['cheap', 'fair', 'expensive', 'suspicious', 'few'];
 
 function mapFor(ctx) {
   if (!ctx.mapView) {
@@ -89,10 +90,10 @@ export async function renderSearch(ctx, body) {
 
   function paint(res) {
     view.setPins(res.items.map((x) => ({ id: x.id, lat: x.pin_lat, lon: x.pin_lon, label: shortPrice(ctx, x),
-      verdict: x.eval?.verdict ?? 'few', title: name(ctx, x), active: ctx.pageId === x.id })));
+      verdict: shownVerdict(x.eval), title: name(ctx, x), active: ctx.pageId === x.id })));
     count.textContent = ctx.P('app.found', { n: res.total });
     list.replaceChildren(...(res.items.length ? res.items.map((x) => h('button', {
-      type: 'button', class: `ui-card is-${x.eval?.verdict ?? 'few'}`, 'data-testid': `card-${x.id}`, onclick: () => ctx.openListing(x.id),
+      type: 'button', class: `ui-card is-${shownVerdict(x.eval)}`, 'data-testid': `card-${x.id}`, onclick: () => ctx.openListing(x.id),
     }, thumb(x), h('span', { class: 'ui-card-main' },
       h('span', { class: 'ui-card-top' }, verdictBadge(ctx, x.eval), h('b', { class: 'ui-price' }, price(ctx, x.price, x.currency))),
       h('b', { class: 'ui-card-title' }, name(ctx, x)),

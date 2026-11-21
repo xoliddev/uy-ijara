@@ -2,7 +2,7 @@
 // recalculated as the landlord types, with a marker showing where their price falls before they publish.
 import { AMENITIES, BUILDINGS, RENOVATIONS, AUDIENCES } from '../shared/listing.js';
 import { parsePrice, toUzs } from '../shared/money.js';
-import { bandMoney, signed } from '../shared/i18n.js';
+import { bandMoney, shownVerdict, signed } from '../shared/i18n.js';
 import { roomSvg } from './art.js';
 import { bandBar, phoneSheet, price, T } from './parts.js';
 import { debounce, h, haptic } from './util.js';
@@ -43,10 +43,10 @@ export function openForm(ctx) {
         lines.push(h('p', { class: 'ui-muted' }, ctx.T('fair.no_band')));
       }
       if (ev.pct !== undefined && ev.pct !== null && draft.price) {
-        lines.push(h('p', { class: `ui-yours is-${ev.verdict}`, 'data-testid': 'live-verdict' }, ctx.T('fair.your_price', {
-          price: price(ctx, draft.price, draft.currency), verdict: ctx.T(`verdict.${ev.verdict}`), pct: signed(ev.pct) })));
+        lines.push(h('p', { class: `ui-yours is-${shownVerdict(ev)}`, 'data-testid': 'live-verdict' }, ctx.T('fair.your_price', {
+          price: price(ctx, draft.price, draft.currency), verdict: ctx.T(`verdict.${shownVerdict(ev)}`), pct: signed(ev.pct) })));
       }
-      live.className = `ui-live is-${ev.verdict ?? 'none'}`;
+      live.className = `ui-live is-${ev.verdict ? shownVerdict(ev) : 'none'}`;
       live.replaceChildren(...lines);
     } catch (err) {
       if (mine === seq) live.replaceChildren(h('p', { class: 'ui-muted' }, ctx.T(`err.${err.code}`)));

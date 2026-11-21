@@ -2,8 +2,8 @@
 .ui {
   --bg: #f5f3ee; --surface: #fff; --ink: #1d2330; --muted: #677083; --line: #e4e0d6; --chip: #eeebe3;
   --btn: #1d2330; --btn-ink: #fff; --link: #2f5fd0; --r: 14px;
-  --cheap: #14965a; --fair: #2f6fdb; --expensive: #d6443a; --few: #8b93a3;
-  --cheap-bg: #e5f5ec; --fair-bg: #e6eefc; --expensive-bg: #fce8e6; --few-bg: #eef0f3;
+  --suspicious: #b26a00; --cheap: #14965a; --fair: #2f6fdb; --expensive: #d6443a; --few: #8b93a3;
+  --cheap-bg: #e5f5ec; --fair-bg: #e6eefc; --expensive-bg: #fce8e6; --few-bg: #eef0f3; --suspicious-bg: #fdf1dc;
   position: relative; display: flex; flex-direction: column; min-height: 100%; background: var(--bg); color: var(--ink);
   font: 14.5px/1.42 -apple-system, "SF Pro Text", "Segoe UI", Roboto, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased; font-variant-numeric: tabular-nums;
@@ -12,13 +12,13 @@
   .ui:not([data-scheme="light"]) {
     --bg: #11141a; --surface: #1a1f28; --ink: #eef1f6; --muted: #9aa3b3; --line: #2a303b; --chip: #232934;
     --btn: #eef1f6; --btn-ink: #11141a; --link: #8fb4ff;
-    --cheap-bg: #12301f; --fair-bg: #172540; --expensive-bg: #3a1a18; --few-bg: #232934;
+    --cheap-bg: #12301f; --fair-bg: #172540; --expensive-bg: #3a1a18; --few-bg: #232934; --suspicious-bg: #3a2a10;
   }
 }
 .ui[data-scheme="dark"] {
   --bg: #11141a; --surface: #1a1f28; --ink: #eef1f6; --muted: #9aa3b3; --line: #2a303b; --chip: #232934;
   --btn: #eef1f6; --btn-ink: #11141a; --link: #8fb4ff;
-  --cheap-bg: #12301f; --fair-bg: #172540; --expensive-bg: #3a1a18; --few-bg: #232934;
+  --cheap-bg: #12301f; --fair-bg: #172540; --expensive-bg: #3a1a18; --few-bg: #232934; --suspicious-bg: #3a2a10;
 }
 .ui *, .ui *::before, .ui *::after { box-sizing: border-box; }
 .ui :where(button) { font: inherit; color: inherit; cursor: pointer; }
@@ -81,6 +81,7 @@ body { margin: 0; background: #f5f3ee; }
 .ui-badge.is-cheap { color: var(--cheap); background: var(--cheap-bg); }
 .ui-badge.is-fair { color: var(--fair); background: var(--fair-bg); }
 .ui-badge.is-expensive { color: var(--expensive); background: var(--expensive-bg); }
+.ui-badge.is-suspicious { color: var(--suspicious); background: var(--suspicious-bg); }
 .ui-badge.is-few { color: var(--few); background: var(--few-bg); }
 
 /* list */
@@ -94,7 +95,7 @@ body { margin: 0; background: #f5f3ee; }
 .ui-thumb { display: block; width: 92px; height: 66px; border-radius: 10px; overflow: hidden; background: var(--chip); }
 .ui-thumb svg { display: block; width: 100%; height: 100%; }
 .ui-card-main { display: grid; gap: 2px; min-width: 0; }
-.ui-card-top { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+.ui-card-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 2px 6px; }
 .ui-card-title { font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ui-price { font-weight: 800; white-space: nowrap; }
 .ui-meta, .ui-muted { font-size: 12.5px; color: var(--muted); }

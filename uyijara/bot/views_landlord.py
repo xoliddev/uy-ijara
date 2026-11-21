@@ -5,7 +5,19 @@ from __future__ import annotations
 from html import escape
 
 from ..core.listing import AUDIENCES, BUILDINGS, RENOVATIONS, fmt_phone
-from ..i18n import Raw, band_money, date_label, district_name, money, signed, slot_label, t, title, verdict_line
+from ..i18n import (
+    Raw,
+    band_money,
+    date_label,
+    district_name,
+    money,
+    shown_verdict,
+    signed,
+    slot_label,
+    t,
+    title,
+    verdict_line,
+)
 from .views import Screen, back, grid, pick_district, pick_rooms
 
 
@@ -45,7 +57,7 @@ def band_lines(lang: str, ev: dict | None, price: int | None, currency: str, rat
     out = t(lang, "fair.suggest", lo=lo, hi=hi)
     if price is not None and ev.get("pct") is not None:
         out += "\n" + t(lang, "fair.your_price", price=money(lang, price, currency),
-                        verdict=t(lang, f"verdict.{ev['verdict']}"), pct=signed(ev["pct"]))
+                        verdict=t(lang, f"verdict.{shown_verdict(ev)}"), pct=signed(ev["pct"]))
     return out
 
 
@@ -135,7 +147,7 @@ def new_preview(lang: str, d: dict, ev: dict, dmap: dict, rate: int) -> Screen:
     yours = ""
     if ev.get("pct") is not None:
         yours = t(lang, "fair.your_price", price=money(lang, d["price"], d["currency"]),
-                  verdict=t(lang, f"verdict.{ev['verdict']}"), pct=signed(ev["pct"]))
+                  verdict=t(lang, f"verdict.{shown_verdict(ev)}"), pct=signed(ev["pct"]))
     rows = [[(t(lang, "btn.publish"), "nw:pub:0")], [(t(lang, "btn.edit_price"), "nw:back:price")]]
     return t(lang, "new.preview", summary=Raw(summary), band=Raw(band), yours=Raw(yours)), \
         [*rows, back(lang, "nw:back:address")]

@@ -1,6 +1,6 @@
 // "Uy egasi" tab, own listings only: incoming viewing requests (accept / decline), each listing with its verdict and
 // band, price editing with the live band, pause / resume / renew, viewing times; and the "+ Yangi e'lon" form.
-import { dateLabel, signed } from '../shared/i18n.js';
+import { dateLabel, shownVerdict, signed } from '../shared/i18n.js';
 import { parsePrice, toUzs } from '../shared/money.js';
 import { fmtPhone } from '../shared/listing.js';
 import { bandBar, name, price, T, thumb, verdictBadge, when } from './parts.js';
@@ -37,8 +37,8 @@ function priceEditor(ctx, x) {
     try {
       const ev = await ctx.api.preview({ ...x, id: x.id, price: p[0], currency: p[1] });
       live.replaceChildren(bandBar(ctx, ev, toUzs(p[0], p[1], ctx.rate), p[1]), ev.pct === null || ev.pct === undefined ? ''
-        : h('p', { class: `ui-yours is-${ev.verdict}` }, ctx.T('fair.your_price', { price: price(ctx, p[0], p[1]),
-          verdict: ctx.T(`verdict.${ev.verdict}`), pct: signed(ev.pct) })));
+        : h('p', { class: `ui-yours is-${shownVerdict(ev)}` }, ctx.T('fair.your_price', { price: price(ctx, p[0], p[1]),
+          verdict: ctx.T(`verdict.${shownVerdict(ev)}`), pct: signed(ev.pct) })));
     } catch (err) { ctx.fail(err); }
   }, 150);
   field.addEventListener('input', check);

@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.1 — 2026-11-22
+
+- A rent 35 % or more below its comparables now shows as an amber "Shubhali arzon" (⚠️) everywhere — bot lists,
+  Mini App cards, map pins, the listing page, the landlord's live verdict — instead of a green "Arzon", and it sorts
+  after the real verdicts under "Adolatli narx" instead of first.
+- The call button after an accepted viewing says "Qo'ng'iroq qilish" instead of repeating the number.
+- Listing card headers wrap on narrow phones instead of pushing the price off the card.
+
 ## 1.0.0 — 2026-11-21
 
 First release (day 3 of the 30-day portfolio challenge).

@@ -17,6 +17,7 @@ from .helpers import (
     NODIRA,
     OTHER,
     PAUSED,
+    SUSPICIOUS,
     TIMUR,
     draft,
     service_env,
@@ -34,7 +35,8 @@ async def test_search_gives_verdicts_and_hides_private_fields():
     async with service_env() as (svc, _):
         f, hits, total = await svc.search(AZIZ, {"district": "chilonzor", "rooms": 2})
         assert total == len(hits) == 8 and f["sort"] == "fair"
-        assert hits[0]["eval"]["verdict"] == "cheap" and hits[-1]["id"] == EXPENSIVE  # fair-price score order
+        assert hits[0]["eval"]["verdict"] == "cheap" and not hits[0]["eval"]["suspicious"]  # fair-price score order
+        assert hits[-1]["id"] == SUSPICIOUS and hits[-2]["id"] == EXPENSIVE  # too-good-to-be-true sorts last
         assert all("address" not in h and "lat" not in h for h in hits)
         exp = next(h for h in hits if h["id"] == EXPENSIVE)
         assert exp["eval"]["verdict"] == "expensive" and exp["currency"] == "USD" and exp["price"] == 470
