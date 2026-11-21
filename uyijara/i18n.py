@@ -86,7 +86,7 @@ def fair_text(lang: str, x: dict, ev: dict, dmap: dict, rate: int) -> str:
     district = district_name(lang, x["district"], dmap)
     if ev["verdict"] == "few":
         return t(lang, "fair.few", district=district, n=ev["n"])
-    expected = money(lang, in_currency(ev["expected"], x["currency"], rate), x["currency"])
+    expected = money(lang, in_currency(round_to(ev["expected"], 10_000), x["currency"], rate), x["currency"])
     scope = t(lang, f"fair.scope_{ev['scope']}", district=district, n=ev["n"], rooms=x["rooms"], lo=ev["rooms_lo"],
               hi=ev["rooms_hi"], expected=expected)
     pct = ev["pct"]

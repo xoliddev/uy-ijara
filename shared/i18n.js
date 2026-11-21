@@ -51,7 +51,7 @@ export function verdictLine(t, lang, ev) {
 export function fairText(t, lang, x, ev, dmap, rate) {
   const district = districtName(lang, x.district, dmap);
   if (ev.verdict === 'few') return t(lang, 'fair.few', { district, n: ev.n });
-  const expected = money(t, lang, inCurrency(ev.expected, x.currency, rate), x.currency);
+  const expected = money(t, lang, inCurrency(roundTo(ev.expected, 10_000), x.currency, rate), x.currency);
   const scope = t(lang, `fair.scope_${ev.scope}`, { district, n: ev.n, rooms: x.rooms, lo: ev.rooms_lo, hi: ev.rooms_hi, expected });
   const tail = ev.verdict === 'fair' ? t(lang, 'fair.pct_fair', { pct: signed(ev.pct) })
     : t(lang, `fair.pct_${ev.verdict}`, { pct: Math.abs(ev.pct) });
