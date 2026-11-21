@@ -40,7 +40,7 @@ async def api(rate: int = 1000):
 async def test_auth_signature_and_freshness():
     async with api() as (c, _, _, h):
         assert (await c.get("/api/me")).status == 401
-        assert (await c.get("/api/me", headers=h(AZIZ, token="999:WRONG"))).status == 401
+        assert (await c.get("/api/me", headers=h(AZIZ, token="999:WRONG-TEST-ONLY"))).status == 401
         assert (await c.get("/api/me", headers=h(AZIZ, age=4000))).status == 401  # older than INITDATA_MAX_AGE
         assert (await c.get("/api/me", headers=h(AZIZ, age=-600))).status == 401  # from the future
         tampered = h(AZIZ)["Authorization"].replace("U1001", "U1002")

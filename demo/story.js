@@ -4,7 +4,7 @@
 import { AZIZ, FINAL_PRICE, NEW_FLAT, NODIRA, STORY_CHEAP, STORY_EXPENSIVE, TYPED_PRICES } from './seed.js';
 
 export const STEPS = ['step1', 'step2', 'step3', 'step4', 'step5', 'step6', 'step7', 'step8', 'step9'];
-const NEEDS = { 6: [5], 7: [6], 9: [1, 8] };
+const NEEDS = { 6: [5], 7: [6], 9: [2, 8] };
 export const FILTER = { district: 'chilonzor', rooms: 2 };
 
 /** Press the newest button whose callback data matches `re`. */
@@ -27,8 +27,8 @@ const pendingOf = (b) => b.viewings.find((v) => v.tenant_id === AZIZ && v.listin
 const acceptedOf = (b) => b.viewings.find((v) => v.tenant_id === AZIZ && v.listing_id === STORY_CHEAP && v.status === 'accepted');
 
 const ACTIONS = {
-  // 1. Aziz searches in the bot: Chilonzor, 2 rooms, any budget; then asks to hear about new listings like these.
-  async 1({ backend, bots, pause, focus }) {
+  // 1. Aziz searches in the bot: Chilonzor, 2 rooms, any budget.
+  async 1({ bots, pause, focus }) {
     const aziz = bots[AZIZ];
     focus(AZIZ, 'chat');
     aziz.start();
@@ -40,13 +40,15 @@ const ACTIONS = {
     tap(aziz, /^w:r:2$/);
     await pause();
     tap(aziz, /^w:b:0$/);
-    await pause(900);
-    if (!backend.subs.some((s) => s.user_id === AZIZ)) tap(aziz, /^n:save$/);
   },
-  // 2. The same filter in the Mini App: the map with pins coloured by the verdict.
-  async 2({ ui, focus }) {
+  // 2. The same filter in the Mini App: the map with pins coloured by the verdict; "tell me about new ones".
+  async 2({ backend, ui, pause, focus }) {
     focus(AZIZ, 'app');
     await ui?.search(AZIZ, FILTER);
+    await pause(900);
+    if (backend.subs.some((s) => s.user_id === AZIZ)) return;
+    if (ui) await ui.saveSearch(AZIZ);
+    else backend.addSub(AZIZ, FILTER);
   },
   // 3. The red "Qimmat" flat: why is it expensive?
   async 3({ ui, focus }) {

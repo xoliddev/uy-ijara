@@ -88,6 +88,10 @@ const ui = {
     app.go('search');
     await app.refresh();
   },
+  async saveSearch(uid) {
+    (await until(uid, '[data-testid=save-search]')).click();
+    await until(uid, '.ui-toast');
+  },
   async open(uid, lid, at = 'verdict') {
     await apps[uid].openListing(lid);
     const el = await until(uid, `[data-testid=${at}]`);

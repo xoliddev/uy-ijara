@@ -1,0 +1,46 @@
+name: Pages
+
+# Publishes the in-browser demo to https://<owner>.github.io/uy-ijara/ (no backend: everything runs in the page).
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - name: Assemble the site (same layout as scripts/serve.mjs)
+        run: |
+          mkdir -p _site
+          cp demo/index.html _site/index.html
+          cp -r demo webapp shared _site/
+          rm -f _site/shared/test_vectors.json
+          touch _site/.nojekyll
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+          include-hidden-files: true
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
