@@ -1,0 +1,21 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+*.db
+*.db-wal
+*.db-shm
+*.sqlite3
+# anchored on purpose: shared/data/ must stay tracked
+/data/
+/node_modules
+node_modules/
+test-results/
+.e2e/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,19 @@
+{
+  "landlords": [
+    {"id": 3001, "name": "Nodira", "phone": "+998900003001"},
+    {"id": 3002, "name": "Rustam", "phone": "+998900003002"},
+    {"id": 3003, "name": "Dilshod", "phone": "+998900003003"},
+    {"id": 3004, "name": "Malika", "phone": "+998900003004"},
+    {"id": 3005, "name": "Javohir", "phone": "+998900003005"},
+    {"id": 3006, "name": "Gulnora", "phone": "+998900003006"},
+    {"id": 3007, "name": "Sherzod", "phone": "+998900003007"},
+    {"id": 3008, "name": "Zarina", "phone": "+998900003008"},
+    {"id": 3009, "name": "Bekzod", "phone": "+998900003009"},
+    {"id": 3010, "name": "Sevara", "phone": "+998900003010"}
+  ],
+  "tenants": [
+    {"id": 1001, "name": "Aziz", "phone": "+998930001001"},
+    {"id": 1002, "name": "Kamola", "phone": "+998930001002"},
+    {"id": 1003, "name": "Timur", "phone": null}
+  ]
+}

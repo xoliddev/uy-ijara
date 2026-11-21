@@ -1,0 +1,14 @@
+[
+  {"id": "chilonzor", "name": {"uz": "Chilonzor", "ru": "Чиланзар"}, "aliases": ["Chilanzar", "Chilonzor-9"], "lat": 41.2750, "lon": 69.2050, "ppm": 98000, "streets": ["Lolazor", "Bog'bon", "Charxpalak"]},
+  {"id": "yunusobod", "name": {"uz": "Yunusobod", "ru": "Юнусабад"}, "aliases": ["Yunusabad"], "lat": 41.3650, "lon": 69.2850, "ppm": 120000, "streets": ["Kamalak", "Sadaf", "Yulduz"]},
+  {"id": "mirzo-ulugbek", "name": {"uz": "Mirzo Ulug'bek", "ru": "Мирзо-Улугбек"}, "aliases": ["Ulugbek", "Улугбек"], "lat": 41.3380, "lon": 69.3350, "ppm": 118000, "streets": ["Gulshan", "Bahor", "Chinor"]},
+  {"id": "yakkasaroy", "name": {"uz": "Yakkasaroy", "ru": "Яккасарай"}, "aliases": ["Yakkasaray"], "lat": 41.2850, "lon": 69.2550, "ppm": 130000, "streets": ["Zarafshon", "Mehrigiyo", "Qaldirg'och"]},
+  {"id": "shayxontohur", "name": {"uz": "Shayxontohur", "ru": "Шайхантахур"}, "aliases": ["Shayxontoxur", "Shaykhantakhur"], "lat": 41.3200, "lon": 69.2300, "ppm": 112000, "streets": ["Anor", "Bodomzor", "Shaftoli"]},
+  {"id": "olmazor", "name": {"uz": "Olmazor", "ru": "Алмазар"}, "aliases": ["Almazar"], "lat": 41.3500, "lon": 69.2150, "ppm": 92000, "streets": ["Do'stlik", "Tong", "Shabada"]},
+  {"id": "mirobod", "name": {"uz": "Mirobod", "ru": "Мирабад"}, "aliases": ["Mirabad"], "lat": 41.2950, "lon": 69.2800, "ppm": 135000, "streets": ["Ilhom", "Orzu", "Nurafshon"]},
+  {"id": "sergeli", "name": {"uz": "Sergeli", "ru": "Сергели"}, "aliases": [], "lat": 41.2250, "lon": 69.2200, "ppm": 72000, "streets": ["Yashil", "Kumush", "Marjon"]},
+  {"id": "uchtepa", "name": {"uz": "Uchtepa", "ru": "Учтепа"}, "aliases": [], "lat": 41.2950, "lon": 69.1750, "ppm": 85000, "streets": ["Sharshara", "Quyosh", "Oydin"]},
+  {"id": "yashnobod", "name": {"uz": "Yashnobod", "ru": "Яшнабад"}, "aliases": ["Yashnabad"], "lat": 41.2900, "lon": 69.3400, "ppm": 95000, "streets": ["Bulut", "Kaptar", "Uzumzor"]},
+  {"id": "bektemir", "name": {"uz": "Bektemir", "ru": "Бектемир"}, "aliases": [], "lat": 41.2100, "lon": 69.3350, "ppm": 68000, "streets": ["Sohil", "Zumrad"]},
+  {"id": "yangihayot", "name": {"uz": "Yangihayot", "ru": "Янгихаёт"}, "aliases": ["Yangixayot"], "lat": 41.2050, "lon": 69.2450, "ppm": 70000, "streets": ["Sunbula", "Tulpor"]}
+]
