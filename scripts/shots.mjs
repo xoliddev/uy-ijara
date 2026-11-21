@@ -53,8 +53,11 @@ const toPhones = (page) => page.evaluate(() => {
   window.scrollTo(0, top - 70);
 });
 
-// desktop: the tenant's map with coloured pins next to the landlord's panel
-let page = await open(1440, 900);
+const ONLY = new Set((process.env.ONLY ?? 'desktop,mobile,gif').split(','));
+let page;
+// desktop: the tenant's map with coloured pins next to the landlord's panel; then the thumbnail
+if (ONLY.has('desktop')) {
+page = await open(1440, 900);
 for (const n of [1, 2]) await step(page, n);
 await page.getByTestId('nodira-tab-app').click();
 await toPhones(page);
@@ -117,7 +120,15 @@ const thumb = await page.evaluate(async ([a, b]) => {
   g.fillStyle = '#9aa6bd';
   ['Telegram bot + Mini App', 'Toshkentda ijara: har bir e’lon', 'o‘xshash uylar bilan solishtiriladi'].forEach((s, i) => g.fillText(s, 90, 560 + i * 46));
   const h = 860;
-  const draw = (img, dx) => g.drawImage(img, dx, 70, (img.width * h) / img.height, h);
+  const draw = (img, dx) => {
+    const w = (img.width * h) / img.height;
+    g.save();
+    g.beginPath();
+    g.roundRect(dx, 70, w, h, (56 * h) / img.height); // the phone's own corner radius, so no page shows through
+    g.clip();
+    g.drawImage(img, dx, 70, w, h);
+    g.restore();
+  };
   draw(ia, 700);
   draw(ib, 700 + (ia.width * h) / ia.height + 24);
   const out = document.createElement('canvas');
@@ -131,19 +142,23 @@ const thumb = await page.evaluate(async ([a, b]) => {
 writeFileSync(`${OUT}/thumb.jpg`, Buffer.from(thumb, 'base64'));
 console.log('wrote thumb.jpg'); // eslint-disable-line no-console
 await page.context().close();
+}
 
 // phone: the cheap listing's verdict page
+if (ONLY.has('mobile')) {
 page = await open(390, 844);
 for (const n of [1, 2, 3, 4]) await step(page, n);
 await page.getByTestId('aziz-phone').scrollIntoViewIfNeeded();
 await page.waitForTimeout(800);
 await jpeg(page, await page.screenshot(), 'demo-mobile.jpg', 390, 844);
 await page.context().close();
+}
 
 // GIF: map -> "Qimmat" -> "Arzon" -> slot -> accepted -> contacts -> new listing with the live band -> alert
+if (ONLY.has('gif')) {
 page = await open(1280, 800);
 const W = 840;
-const H = 560;
+let H = 560;
 const gif = GIFEncoder();
 await step(page, 1);
 await step(page, 2);
@@ -154,8 +169,10 @@ const clip = await page.evaluate(() => {
   const b = document.querySelector('[data-testid=nodira-phone]').getBoundingClientRect();
   const x = Math.max(0, a.left - 30);
   const w = b.right + 30 - x;
-  return { x, y: Math.max(0, a.top - 10), width: w, height: Math.round((w * 2) / 3) };
+  const y = Math.max(0, a.top - 10);
+  return { x, y, width: w, height: Math.min(window.innerHeight - y, Math.round((w * 2) / 3)) };
 });
+H = Math.round((W * clip.height) / clip.width / 2) * 2;
 async function frame(delay = 160) {
   const png = await page.screenshot({ clip });
   const rgba = await page.evaluate(async ([src, w, h]) => {
@@ -168,9 +185,12 @@ async function frame(delay = 160) {
     const g = c.getContext('2d');
     g.imageSmoothingQuality = 'high';
     g.drawImage(img, 0, 0, w, h);
-    return Array.from(g.getImageData(0, 0, w, h).data);
+    const bytes = g.getImageData(0, 0, w, h).data;
+    let bin = '';
+    for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+    return btoa(bin);
   }, [png.toString('base64'), W, H]);
-  const data = Uint8Array.from(rgba);
+  const data = new Uint8Array(Buffer.from(rgba, 'base64'));
   const palette = quantize(data, 128);
   gif.writeFrame(applyPalette(data, palette), W, H, { palette, delay });
 }
@@ -189,5 +209,6 @@ await frame(2600);
 gif.finish();
 writeFileSync(`${OUT}/fair-price-flow.gif`, gif.bytes());
 console.log('wrote fair-price-flow.gif'); // eslint-disable-line no-console
+}
 await browser.close();
 server.close();

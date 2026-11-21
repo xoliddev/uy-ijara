@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import sqlite3
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -112,7 +113,14 @@ class Database:
         """``BEGIN IMMEDIATE`` takes the write lock up front, so check-then-write sequences cannot interleave,
         neither between coroutines (asyncio lock) nor between processes (SQLite lock + busy_timeout)."""
         async with self.lock:
-            await self.conn.execute("BEGIN IMMEDIATE")
+            for attempt in range(6):  # busy_timeout already waits; this only covers a very loaded machine
+                try:
+                    await self.conn.execute("BEGIN IMMEDIATE")
+                    break
+                except sqlite3.OperationalError as err:
+                    if "locked" not in str(err) or attempt == 5:
+                        raise
+                    await asyncio.sleep(0.05 * (attempt + 1))
             try:
                 yield self.conn
             except BaseException:
