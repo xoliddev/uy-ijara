@@ -139,7 +139,8 @@ def build() -> dict:
 
 
 def main() -> None:
-    OUT.write_text(json.dumps(build(), ensure_ascii=False, indent=None, separators=(",", ":")) + "\n", encoding="utf-8")
+    body = json.dumps(build(), ensure_ascii=False, separators=(",", ":")) + "\n"
+    OUT.write_text(body, encoding="utf-8", newline="\n")
     print(f"wrote {OUT.relative_to(ROOT)}")
 
 
