@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import * as clock from '../shared/clock.js';
 import * as fair from '../shared/fair.js';
+import * as i18n from '../shared/i18n.js';
 import * as listing from '../shared/listing.js';
 import * as money from '../shared/money.js';
 import * as search from '../shared/search.js';
@@ -105,4 +106,23 @@ test('seed generator gives the same city as Python', () => {
   assert.equal(later.listings.length, V.seed_nye.count);
   assert.deepEqual(later.slots.slice(0, 3), V.seed_nye.slots);
   assert.deepEqual(later.listings[0], V.seed_nye.first);
+});
+
+test('texts: the fair-price sentence, verdict tags, bands, slot times, dates, "N min ago" (uz and ru)', () => {
+  const t = i18n.makeT({ uz: read('../shared/locales/uz.json'), ru: read('../shared/locales/ru.json') });
+  const active = V.seed.listings.filter((x) => x.status === 'active');
+  const evals = fair.evaluateAll(active, RATE);
+  for (const v of V.texts) {
+    const x = active.find((l) => l.id === v.id);
+    const e = evals[x.id];
+    assert.equal(i18n.fairText(t, v.lang, x, e, dmap, RATE), v.fair, `${v.id} ${v.lang}`);
+    assert.equal(i18n.verdictLine(t, v.lang, e), v.verdict);
+    assert.equal(i18n.factorsText(t, v.lang, e.factors), v.factors);
+    assert.equal(e.band ? i18n.bandText(t, v.lang, e.band, x.currency, RATE) : null, v.band);
+    assert.equal(i18n.title(t, v.lang, x), v.title);
+    assert.equal(i18n.money(t, v.lang, x.price, x.currency), v.money);
+  }
+  for (const v of V.slot_labels) assert.equal(i18n.slotLabel(t, v.lang, v.t, v.now), v.out, `${v.lang} ${v.t}`);
+  for (const v of V.dates) assert.equal(i18n.dateLabel(t, v.lang, v.ms), v.out);
+  for (const v of V.ago) assert.equal(i18n.ago(t, v.lang, V.now - v.d, V.now), v.out);
 });

@@ -15,6 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
+from uyijara import i18n  # noqa: E402
 from uyijara.core import clock, fair, listing, money, search, seedgen, text, viewing  # noqa: E402
 
 OUT = ROOT / "shared" / "test_vectors.json"
@@ -135,6 +136,20 @@ def build() -> dict:
                            ("open", p[0], NOW, 0, True, False), ("open", p[0], NOW, 0, False, True))]
     v["moves"] = [{"s": s, "a": a, "out": res(viewing.move, s, a)} for s in ("pending", "accepted", "declined")
                   for a in ("accept", "decline", "cancel", "expire")]
+    v["texts"] = []
+    for x in active[:30]:
+        e = evals[x["id"]]
+        for lang in ("uz", "ru"):
+            v["texts"].append({"id": x["id"], "lang": lang, "fair": i18n.fair_text(lang, x, e, dmap, RATE),
+                               "verdict": i18n.verdict_line(lang, e), "factors": i18n.factors_text(lang, e["factors"]),
+                               "band": i18n.band_text(lang, e["band"], x["currency"], RATE) if e["band"] else None,
+                               "title": i18n.title(lang, x), "money": i18n.money(lang, x["price"], x["currency"])})
+    v["slot_labels"] = [{"lang": lang, "now": n, "t": t, "out": i18n.slot_label(lang, t, n)} for lang in ("uz", "ru")
+                        for n in (NOW, NYE) for t in [*viewing.presets(n), n + 3_600_000, n + 6 * 86_400_000]]
+    v["dates"] = [{"lang": lang, "ms": ms, "out": i18n.date_label(lang, ms)} for lang in ("uz", "ru")
+                  for ms in (NOW, NYE, NYE + 7_200_000)]
+    v["ago"] = [{"lang": lang, "d": d, "out": i18n.ago(lang, NOW - d, NOW)} for lang in ("uz", "ru")
+                for d in (0, 59_999, 60_000, 3_599_999, 3_600_000, 86_400_000 * 3)]
     return v
 
 

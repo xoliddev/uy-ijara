@@ -1,0 +1,22 @@
+# docker compose up -d --build     (put your values in .env first: cp .env.example .env)
+services:
+  uyijara:
+    build: .
+    env_file: .env
+    environment:
+      DB_PATH: /data/uyijara.db
+    ports:
+      - "8080:8080"
+    volumes:
+      - uyijara-data:/data
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    restart: unless-stopped
+
+volumes:
+  uyijara-data:

@@ -136,15 +136,16 @@ class Service(LandlordMixin):
         x = await self.listing_row(lid)
         own = x["landlord_id"] == uid
         visible = x["status"] == "active" and not x["hidden"] and x["expires_at"] > self.now()
-        if not visible and not own:
+        if not visible and not own and uid not in self.admins:
             raise Refused("not_found")
         evals, live = await self.pool()
         ev = evals.get(lid) or fair.evaluate(x, live, self.rate)
         names = await self.names({x["landlord_id"]})
         out = self.public(x, ev, names)
         out["slots"] = await self.open_slots(lid)
-        mine = await self.db.one("SELECT * FROM viewings WHERE listing_id = ? AND tenant_id = ? AND status IN "
-                                 "('pending', 'accepted') ORDER BY id DESC LIMIT 1", (lid, uid))
+        mine = await self.db.one("SELECT v.*, s.start_at FROM viewings v JOIN slots s ON s.id = v.slot_id WHERE "
+                                 "v.listing_id = ? AND v.tenant_id = ? AND v.status IN ('pending', 'accepted') "
+                                 "ORDER BY v.id DESC LIMIT 1", (lid, uid))
         out["my_viewing"] = mine
         out["own"] = own
         out["contact"] = None
