@@ -110,6 +110,8 @@ async def test_rate_limit_static_files_and_health():
         codes = [(await c.get("/api/me", headers=h(AZIZ))).status for _ in range(5)]
         assert codes[:3] == [200, 200, 200] and codes[-1] == 429
         page = await c.get("/webapp/index.html")
+        root = await c.get("/webapp/")  # the address the bot opens
+        assert root.status == 200 and "<html" in (await root.text()).lower()
         assert page.status == 200 and "Content-Security-Policy" in page.headers
         assert (await c.get("/shared/fair.js")).status == 200
         assert (await c.get("/healthz")).status == 200

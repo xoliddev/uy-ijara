@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.2 — 2026-11-23
+
+- The server answers `/webapp/` (the address the bot's Mini App button opens) with the Mini App page. Before, aiohttp's
+  static route answered 403 for the folder itself, so a real deployment opened an error instead of the app.
+
 ## 1.0.1 — 2026-11-22
 
 - A rent 35 % or more below its comparables now shows as an amber "Shubhali arzon" (⚠️) everywhere — bot lists,
